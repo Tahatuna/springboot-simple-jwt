@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET})
+@CrossOrigin(methods = {RequestMethod.GET})
 public class GreetingAPIs {
 
     @GetMapping("/sayHelloToMe")

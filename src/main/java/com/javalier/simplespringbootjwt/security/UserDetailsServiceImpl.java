@@ -1,12 +1,12 @@
 package com.javalier.simplespringbootjwt.security;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,14 +16,12 @@ import java.util.Map;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private Map<String, String> users = new HashMap<>();
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init() {
-        users.put("ta", passwordEncoder.encode("1234"));
+        users.put("username", passwordEncoder.encode("1234"));
     }
 
     @Override

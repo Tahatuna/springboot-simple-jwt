@@ -3,6 +3,8 @@ package com.javalier.simplespringbootjwt.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ import java.util.Date;
 @Service
 public class JWTManager {
 
-    SecretKey key = Jwts.SIG.HS256.key().build();
+
     @Value("${jwt.secret.key}")
     private String jwtSecretKey;
     @Value("${jwtExpirationTime}")
@@ -24,8 +26,12 @@ public class JWTManager {
                 .issuer("javalier.net")
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationTime))
-                .signWith(SignatureAlgorithm.forSigningKey(key), jwtSecretKey)
+                .signWith(key())
                 .compact();
+    }
+
+    public SecretKey key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretKey));
     }
 
     public boolean validateJwt(String jwt) {
@@ -37,11 +43,11 @@ public class JWTManager {
     }
 
     public boolean isJwtExpired(String jwt) {
-        return getClaims(jwt).getExpiration().before(new Date(System.currentTimeMillis()));
+        return getClaims(jwt).getExpiration().after(new Date(System.currentTimeMillis()));
     }
 
     private Claims getClaims(String jwt) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getPayload();
+        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(jwt).getPayload();
     }
 
 }

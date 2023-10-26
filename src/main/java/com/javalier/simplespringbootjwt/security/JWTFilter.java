@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter {
+public class JWTFilter extends OncePerRequestFilter {
 
     private JWTManager jwtManager;
 
     @Autowired
-    public JwtFilter(JWTManager jwtManager) {
+    public JWTFilter(JWTManager jwtManager) {
         this.jwtManager = jwtManager;
     }
 
